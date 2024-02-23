@@ -1,45 +1,88 @@
-import React, { useState, useEffect } from 'react';
-import './App.css'; // Assuming you have a CSS file for styling
+// 
+import logo from './logo.svg';
+import './App.css';
+import React from 'react';
+import { render } from '@testing-library/react';
 
-function App() {
-  const [message, setMessage] = useState('');
-  const [data, setData] = useState(null);
-  const [prices, setPrices] = useState(null);
+class App extends React.Component
+{
+  constructor (props){
+    super(props)
+    this.state={
+      data : "",
+      prices: ""
+    }
+  }
 
-  useEffect(() => {
-    // Fetching data from server when the component mounts
-    fetch('http://localhost:8000/message')
-      .then(response => response.json())
-      .then(data => setMessage(data.message));
+  info(){
+    fetch('http://localhost:8000/getData')
+        .then(response => response.json())
+        .then(json => this.setState({data:json}))
+        .catch(error => console.error(error));
+  }
+  
+  products(){
+    fetch('http://localhost:8000/getPrices')
+        .then(response => response.json())
+        .then(json => this.setState({prices:json}))
+        .catch(error => console.error(error));
+  }
+  fetchData=()=>
+  {
+     this.info();
+     this.products();
+  }
+  render()
+  {
+     return (
+      <div>
+        <button onClick={this.fetchData}>fetch </button>
+        <p>{this.state.data.name}</p>
+        <p>{this.state.data.age}</p>
+        <p>{this.state.data.field}</p>
 
-    fetch('http://localhost:8000/getdata')
-      .then(response => response.json())
-      .then(data => setData(data));
-
-    fetch('http://localhost:8000/getprice')
-      .then(response => response.json())
-      .then(data => setPrices(data));
-  }, []);
-
-  return (
-    <div className="container">
-      <h1>React App</h1>
-      <p>Message from server: {message}</p>
-      <p>Data: {data ? Name: ${data.name}, Age: ${data.age} : 'Loading...'}</p>
-      <div className="prices">
-        {prices ? (
-          Object.entries(prices).map(([product, price]) => (
-            <div key={product} className="box">
-              <p>{product}</p>
-              <p>${price}</p>
-            </div>
-          ))
-        ) : (
-          <p>Loading...</p>
-        )}
+        <div><p>{this.state.prices.price1}</p>
+        <p>{this.state.prices.price2}</p>
+        <p>{this.state.prices.price3}</p></div>
       </div>
-    </div>
-  );
+     )
+  }
+ 
 }
+
+
+
+
+// function App() {
+//   {info()}
+//   {products()}
+//   return (
+//     <div className="App">
+//     <p>my name is {res.name}</p>
+//     <p>my age is {res.age}</p>
+//     <p>my field is {res.field}</p>
+//     <div>
+//       <p>f{res.price1}</p>
+//       <p>{res.price2}</p>
+//       <p>{res.price3}</p>
+//     </div>
+
+//       <header className="App-header">
+//         <img src={logo} className="App-logo" alt="logo" />
+//         <p>
+//           Edit <code>src/App.js</code> and save to reload.
+//         </p>
+//         <a
+//           className="App-link"
+//           href="https://reactjs.org"
+//           target="_blank"
+//           rel="noopener noreferrer"
+//         >
+//           Learn React
+//         </a>
+//       </header>
+//     </div>
+//   );
+// }
 
 export default App;
