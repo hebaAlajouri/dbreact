@@ -16,7 +16,7 @@ app.get('/getData',function(req,res)
 app.get('/getPrice',function(req,res)
 {
   var prices={price1:"22.3",price2:"33.1",price3:"44.1",price4:"22.5"}
-  res.json(data)
+  res.json(prices)
 })
 
 
